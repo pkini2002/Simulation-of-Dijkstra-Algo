@@ -183,13 +183,25 @@ void title()
      drawstring(100,400,"Submitted by");
      glColor3f(0.0,1.0,0.0);
      drawstring(100,360,"PRATHIKSHA KINI");
-     drawstring(100,340,"PALGUNI SAMAGA");
+     glRasterPos2f(250, 360); // set position for next string
+     glBitmap(10, 0, 0, 0, 0, 0, NULL); // add some space between the two names
+     drawstring(260, 360, "4NM20CS139");
      glColor3f(0.0,1.0,0.0);
-     drawstring(100,320,"VI CSE - SEC C");
-     glColor3f(0.0,1.0,0.0);
-     drawstring(100,280,"4NM20CS139");
-     drawstring(100,240,"4NM20CS127");
+     drawstring(100,320,"PALGUNI SAMAGA");
+     glRasterPos2f(250, 320);
+     glBitmap(10, 0, 0, 0, 0, 0, NULL);
+     drawstring(260, 320, "4NM20CS127");
      glColor3f(1.0,1.0,1.0);
+     drawstring(100, 200, "Submitted to:");
+     setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+     glColor3f(1.0, 1.0, 0.0);
+     drawstring(250, 200, "Dr. Sannidhan MS");
+     glColor3f(1.0, 1.0, 1.0);
+     setFont(GLUT_BITMAP_HELVETICA_18);
+     drawstring(250, 170, "Associate Professor");
+     drawstring(250, 140, "Department of Computer Science and Engineering");
+     drawstring(250, 110, "NMAM Institute Of Technology");
+     drawstring(250, 80, "Nitte");
      drawstring(100,100,"Right click in My Window for options");
      glFlush();
 }
@@ -488,7 +500,7 @@ int main(int argc,char *argv[]){
     // GLUT_SINGLE: This flag specifies that the window should use a single buffering display mode.
     // GLUT_RGB: This flag specifies that the window should use an RGB color model for rendering.
 
-    glutInitWindowPosition(820,100);
+    glutInitWindowPosition(920,100);
     glutInitWindowSize(450,450);
 
     // glutInitWindowPosition and glutInitWindowSize are functions from the GLUT (OpenGL Utility Toolkit)
@@ -497,26 +509,20 @@ int main(int argc,char *argv[]){
     glutCreateWindow("Front Sheet");
     glutDisplayFunc(display1);
     myInit1();
-
     glutInitDisplayMode( GLUT_SINGLE|GLUT_RGB );
     glutInitWindowSize(500,500);
     glutInitWindowPosition(0,0);
     glutCreateWindow("My Window");
     glutDisplayFunc(display);
     glutMouseFunc(mouse);
-
-
     glutCreateMenu(top_menu);
     glutAddMenuEntry("Read Cost Matrix",1);
     glutAddMenuEntry("Display Weighted Graph",2);
     glutAddMenuEntry("Display Shortest Path",3);
     glutAddMenuEntry("Exit",4);
     glutAttachMenu(GLUT_RIGHT_BUTTON); // creates a context menu on right click of the mouse
-
-
     printf("\nGO TO MY WINDOW AND CLICK RIGHT BUTTON FOR NEXT OPTION\n");
     init();
-
     glutMainLoop(); // used to display the screen until the program is terminated
 }
 
