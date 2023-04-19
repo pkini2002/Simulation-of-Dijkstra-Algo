@@ -14,6 +14,7 @@ using namespace std;
 int n,i=1,a[25],b[25],cost[25][25],tree[25][25],src,l[2],dist[10];
 char s[20],*s1;
 void *currentfont;
+float angle = 0.0f;
 
 //DRAW A BITMAP NUMBER i at (x,y)
 /* This function draws a single digit number (0-9) as a bitmap character at a specified location (x,y)
@@ -224,15 +225,27 @@ void drawSquare(int x, int y)
 {
      if(i<=n)
      {
-        y = 500-y;                              //Convert from screen coordinates
-        glPointSize(40);
+        y = 500-y; //Convert from screen coordinates
+
+        glPushMatrix();
+        glTranslatef(x, y, 0); //Translate to the center of the square
+        glRotatef(angle, 0.0f, 0.0f, 1.0f); //Rotate around the z-axis
+        glScalef(1, 1, 0.1f); //Scale the square in the z-direction to give it depth
+
         if(i==src)
             glColor3f(0.7f, 0.4f, 0.0f);
         else
             glColor3f(0.5f, 0.5f, 0.8f);
-        glBegin(GL_POINTS);
-        glVertex2f(x , y);
+
+        glBegin(GL_QUADS);
+        glVertex2f(-20, -20);
+        glVertex2f(20, -20);
+        glVertex2f(20, 20);
+        glVertex2f(-20, 20);
         glEnd();
+
+        glPopMatrix();
+
         a[i]=x;
         b[i]=y;
         glColor3f(0.0f, 1.0f, 0.0f);
@@ -241,6 +254,12 @@ void drawSquare(int x, int y)
         glFlush();
     }
     i=i+1;
+}
+
+void idle()
+{
+    angle += 1.0f; // Increase the rotation angle
+    glutPostRedisplay(); // Mark the window for redrawing
 }
 
 
@@ -501,7 +520,7 @@ int main(int argc,char *argv[]){
     // GLUT_RGB: This flag specifies that the window should use an RGB color model for rendering.
 
     glutInitWindowPosition(920,100);
-    glutInitWindowSize(450,450);
+    glutInitWindowSize(1100, 450);
 
     // glutInitWindowPosition and glutInitWindowSize are functions from the GLUT (OpenGL Utility Toolkit)
     //  library used to set the initial position and size of an OpenGL window.
@@ -514,6 +533,7 @@ int main(int argc,char *argv[]){
     glutInitWindowPosition(0,0);
     glutCreateWindow("My Window");
     glutDisplayFunc(display);
+    glutIdleFunc(idle);
     glutMouseFunc(mouse);
     glutCreateMenu(top_menu);
     glutAddMenuEntry("Read Cost Matrix",1);
@@ -525,6 +545,5 @@ int main(int argc,char *argv[]){
     init();
     glutMainLoop(); // used to display the screen until the program is terminated
 }
-
 
 
