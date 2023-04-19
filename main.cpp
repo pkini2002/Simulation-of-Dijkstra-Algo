@@ -501,7 +501,7 @@ int main(int argc,char *argv[]){
     // GLUT_RGB: This flag specifies that the window should use an RGB color model for rendering.
 
     glutInitWindowPosition(920,100);
-    glutInitWindowSize(450,450);
+    glutInitWindowSize(1100, 450);
 
     // glutInitWindowPosition and glutInitWindowSize are functions from the GLUT (OpenGL Utility Toolkit)
     //  library used to set the initial position and size of an OpenGL window.
