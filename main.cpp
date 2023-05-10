@@ -6,6 +6,12 @@
 #include<math.h>
 #include <GL/gl.h>
 
+/*#include <al.h>
+#include <alc.h>
+#include <alut.h>*/
+#include <windows.h>
+#include<mmsystem.h>
+
 using namespace std;
 
 // defining global variables
@@ -15,6 +21,14 @@ int n,i=1,a[25],b[25],cost[25][25],tree[25][25],src,l[2],dist[10];
 char s[20],*s1;
 void *currentfont;
 float angle = 0.0f;
+char chr;
+
+/*ALuint buffer, source;
+alutInit(NULL, NULL);
+buffer = alutCreateBufferFromFile("sound.wav");
+alGenSources(1, &source);
+alSourcei(source, AL_BUFFER, buffer);*/
+
 
 //DRAW A BITMAP NUMBER i at (x,y)
 /* This function draws a single digit number (0-9) as a bitmap character at a specified location (x,y)
@@ -73,10 +87,9 @@ void initial()
 {
     // Clears the color buffer
      glClear(GL_COLOR_BUFFER_BIT);
-     // sets the font to helvetica
+
      setFont(GLUT_BITMAP_HELVETICA_18);
      glColor3f(0.0,0.0,0.0);
-     // Used to write strings on the winodw
      drawstring(20,230,"Input Area");
      drawstring(20,470,"Output Area");
      glColor3f(0.0,0.0,0.0);
@@ -145,10 +158,11 @@ char* itoa(int num, char* str, int base)
 
 //READ DATA: |V|,COST MATRIX, SOURCE VERTEX
 void read()
-{
-    // Enter the number of vertices
+{  // Enter the number of vertices
      printf("Enter the number of vertices\n");
      scanf("%d",&n);
+     printf("Enter the shape of node\n");
+     scanf("%s",&chr);
      // Enter the weighted matrix
      printf("Enter the cost matrix\n");
      for(int j=1;j<=n;j++)
@@ -179,7 +193,7 @@ void title()
      glEnd();
      setFont(GLUT_BITMAP_HELVETICA_18);
      glColor3f(1.0,1.0,1.0);
-     drawstring(100,440,"Topic: Simulation of Dijktra's Algorithm using OpenGL");
+     drawstring(100,440,"Topic: Simulation of Djikstra's Algorithm using OpenGL");
      glColor3f(1.0,1.0,1.0);
      drawstring(100,400,"Submitted by");
      glColor3f(0.0,1.0,0.0);
@@ -207,7 +221,7 @@ void title()
      glFlush();
 }
 
-//DRAW THE NODES (SQUARES)
+//DRAW THE NODES (SQUARES,TRIANGLES,CIRCLES)
 
 /*The function first checks whether i is less than or equal to n, where n is some predefined constant
  indicating the maximum number of squares to draw. If i is greater than n, the function does nothing.
@@ -254,6 +268,71 @@ void drawSquare(int x, int y)
         glFlush();
     }
     i=i+1;
+}
+void drawTriangle(int x, int y)
+{
+     if(i<=n)
+     {
+        y = 500-y; //Convert from screen coordinates
+
+        glPushMatrix();
+        glTranslatef(x, y, 0); //Translate to the center of the square
+        glRotatef(angle, 0.0f, 0.0f, 1.0f); //Rotate around the z-axis
+        glScalef(1, 1, 0.1f); //Scale the square in the z-direction to give it depth
+
+        if(i==src)
+            glColor3f(0.7f, 0.4f, 0.0f);
+        else
+            glColor3f(0.5f, 0.5f, 0.8f);
+
+        glBegin(GL_TRIANGLES);
+        glVertex2f(-20, -20);
+        glVertex2f(20, -20);
+        glVertex2f(0, 20);
+        glEnd();
+
+        glPopMatrix();
+
+        a[i]=x;
+        b[i]=y;
+        glColor3f(0.0f, 1.0f, 0.0f);
+        s1=itoa(i,s,10);
+        drawstring(x-5,y-5,s1);
+        glFlush();
+    }
+    i=i+1;
+}
+void drawCircle(int x, int y)
+{int radius=20;
+    if (i <= n) {
+        y = 500 - y; // Convert from screen coordinates
+
+        glPushMatrix();
+        glTranslatef(x, y, 0); // Translate to the center of the circle
+
+        if (i == src)
+            glColor3f(0.7f, 0.4f, 0.0f);
+        else
+            glColor3f(0.5f, 0.5f, 0.8f);
+
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(0, 0); // Center of the circle
+        for (int angle = 0; angle <= 360; angle += 10) {
+            float radians = angle * (3.14159 / 180.0);
+            glVertex2f(cos(radians) * radius, sin(radians) * radius);
+        }
+        glEnd();
+
+        glPopMatrix();
+
+        a[i] = x;
+        b[i] = y;
+        glColor3f(0.0f, 1.0f, 0.0f);
+        s1 = itoa(i, s, 10);
+        drawstring(x - 5, y - 5, s1);
+        glFlush();
+    }
+    i = i + 1;
 }
 
 void idle()
@@ -430,27 +509,45 @@ void top_menu(int option)
      switch(option)
      {
         // Reads the weighted matrix and number of vertices, source node
-        case 1:read();
+        case 1:PlaySound(TEXT("display.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            read();
+
                glutPostRedisplay();
                break;
         // connects the nodes based on the values provided in the weight matrix
-        case 2:drawline();
+        case 2:PlaySound(TEXT("display.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            drawline();
                glutPostRedisplay();
                break;
         // Computes the shortest path b/w src node to all other nodes
-        case 3:shortestpath();
+        case 3:PlaySound(TEXT("display.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            shortestpath();
                glutPostRedisplay();
                break;
         // terminates the program
-        case 4:exit(0);
+        case 4:PlaySound(TEXT("exit.wav"), NULL, SND_FILENAME | SND_ASYNC);
+             Sleep(2000);
+            exit(0);
      }
 }
 
 // Event handler function which draws squares (Basically nodes) when left button of mouse is pressed
 void mouse(int bin, int state , int x , int y)
 {
-     if(bin==GLUT_LEFT_BUTTON&&state==GLUT_DOWN)
-         drawSquare(x,y);
+     if(bin==GLUT_LEFT_BUTTON&&state==GLUT_DOWN){
+
+        if(chr=='s'||chr=='S'){
+                drawSquare(x,y);
+                PlaySound(TEXT("button.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        }else if(chr=='t'||chr=='T'){
+            drawTriangle(x,y);
+            PlaySound(TEXT("click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        }else if (chr=='c'||chr=='C'){
+            drawCircle(x,y);}
+            PlaySound(TEXT("pick.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        }
+
+        //alSourcePlay(source);
 }
 
 // Used to initialize the settings of OpenGl library of all other screens

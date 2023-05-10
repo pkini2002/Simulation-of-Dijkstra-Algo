@@ -899,3 +899,14 @@
 1526093416 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\math.h
 	<crtdefs.h>
 
+1683696606 source:c:\users\hp\onedrive\desktop\simulation-of-dijkstra-algo\main.cpp
+	<stdio.h>
+	<iostream>
+	<GL/glut.h>
+	<math.h>
+	<GL/gl.h>
+	<alc.h>
+	<alut.h>
+	<windows.h>
+	<mmsystem.h>
+
